@@ -76,7 +76,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // =========================================================
   const SUPABASE_URL = "https://wuvjloziovyalrtydkwi.supabase.co";
   // Ganti dengan Kunci 'anon public' (diawali eyJhbGci...) dari menu Legacy API Keys Supabase Anda
-  const SUPABASE_KEY = "sb_publishable_i60fg0v6h0ijbZnXa73m8A_yqZCeBLR";
+  const SUPABASE_KEY =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind1dmpsb3ppb3Z5YWxydHlka3dpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgxMTExOTUsImV4cCI6MjEwMzY4NzE5NX0.Yf8trBbAyeqhlZBGV5Vw8ifXNr-kyLlsU3OIzWYIVLk";
 
   // Inisialisasi Supabase Client jika SDK tersedia
   if (typeof supabase !== "undefined") {
