@@ -74,8 +74,9 @@ document.addEventListener("DOMContentLoaded", () => {
   // =========================================================
   // 4. INTEGRASI SUPABASE (BUKU TAMU - LAYER 6)
   // =========================================================
-  const SUPABASE_URL = "https://wuvjloziovyalrtydkwi.supabase.co"; // Ganti dengan URL Supabase Anda
-  const SUPABASE_KEY = "sb_publishable_i60fg0v6h0ijbZnXa73m8A_yqZCeBLR"; // Ganti dengan Publishable Key (sb_publishable_...) Anda
+  const SUPABASE_URL = "https://wuvjloziovyalrtydkwi.supabase.co";
+  // Ganti dengan Kunci 'anon public' (diawali eyJhbGci...) dari menu Legacy API Keys Supabase Anda
+  const SUPABASE_KEY = "PASTE_ANON_PUBLIC_KEY_ANDA_DI_SINI";
 
   // Inisialisasi Supabase Client jika SDK tersedia
   if (typeof supabase !== "undefined") {
@@ -90,10 +91,8 @@ document.addEventListener("DOMContentLoaded", () => {
     async function loadUcapan() {
       if (!daftarUcapan) return;
 
-      const { data, error } = await supabaseClient
-        .from("Ucapan") // Memanggil nama tabel 'Ucapan'
-        .select("*")
-        .order("id", { ascending: false });
+      // Mengambil data tanpa .order("id") karena tabel belum memiliki kolom id
+      const { data, error } = await supabaseClient.from("Ucapan").select("*");
 
       if (error) {
         console.error("Gagal memuat ucapan:", error);
@@ -106,19 +105,21 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
+      // Menggunakan .reverse() agar ucapan yang paling baru masuk muncul di bagian atas
       daftarUcapan.innerHTML = data
+        .reverse()
         .map(
           (item) => `
         <div class="ucapan-card">
-          <div class="ucapan-nama">${escapeHtml(item.nama || "Tamu")}</div>
-          <div class="ucapan-pesan">${escapeHtml(item.pesan || "")}</div>
+          <div class="ucapan-nama">${escapeHtml(item.Nama || "Tamu")}</div>
+          <div class="ucapan-pesan">${escapeHtml(item.Pesan || "")}</div>
         </div>
       `,
         )
         .join("");
     }
 
-    // Prevents XSS Attacks
+    // Mencegah Serangan XSS
     function escapeHtml(str) {
       return str
         .replace(/&/g, "&amp;")
@@ -130,10 +131,10 @@ document.addEventListener("DOMContentLoaded", () => {
     if (formUcapan) {
       formUcapan.addEventListener("submit", async (e) => {
         e.preventDefault();
-        const nama = inputNama.value.trim();
-        const pesan = inputPesan.value.trim();
+        const namaVal = inputNama.value.trim();
+        const pesanVal = inputPesan.value.trim();
 
-        if (!nama || !pesan) return;
+        if (!namaVal || !pesanVal) return;
 
         const btnKirim = document.getElementById("btn-kirim");
         if (btnKirim) {
@@ -141,9 +142,10 @@ document.addEventListener("DOMContentLoaded", () => {
           btnKirim.innerText = "Mengirim...";
         }
 
+        // Memasukkan data ke kolom 'Nama' dan 'Pesan' (huruf kapital)
         const { error } = await supabaseClient
           .from("Ucapan")
-          .insert([{ nama: nama, pesan: pesan }]);
+          .insert([{ Nama: namaVal, Pesan: pesanVal }]);
 
         if (btnKirim) {
           btnKirim.disabled = false;
@@ -156,7 +158,7 @@ document.addEventListener("DOMContentLoaded", () => {
           loadUcapan(); // Refresh tampilan ucapan secara instan
         } else {
           console.error("Error insert:", error);
-          alert("Gagal mengirim ucapan, silakan coba lagi.");
+          alert("Gagal mengirim ucapan: " + error.message);
         }
       });
 
