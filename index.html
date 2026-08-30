@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Undangan Pernikahan</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body class="no-scroll">
+    <!-- BACKGROUND UTAMA (cover.png) -->
+    <img src="cover.png" alt="Background" class="fixed-background" />
+
+    <!-- LAYER 1: COVER INTERAKTIF -->
+    <div id="layer1" class="layer-cover">
+      <div class="cover-content">
+        <button id="btn-open" class="btn-open">Buka Undangan</button>
+      </div>
+    </div>
+
+    <!-- WRAPPER UNTUK LAYER 2 - 5 -->
+    <main id="main-content" class="main-container hidden">
+      <!-- LAYER 2: VIDEO -->
+      <section class="layer-section">
+        <div class="media-wrapper">
+          <video id="my-video" class="media-content" playsinline preload="auto">
+            <source src="video.mp4" type="video/mp4" />
+            Browser Anda tidak mendukung tag video.
+          </video>
+        </div>
+      </section>
+
+      <!-- LAYER 3 -->
+      <section class="layer-section">
+        <div class="media-wrapper">
+          <img src="layer3.png" alt="Layer 3" class="media-content" />
+        </div>
+      </section>
+
+      <!-- LAYER 4 -->
+      <section class="layer-section">
+        <div class="media-wrapper">
+          <img src="layer4.png" alt="Layer 4" class="media-content" />
+        </div>
+      </section>
+
+      <!-- LAYER 5 -->
+      <section class="layer-section">
+        <div class="media-wrapper">
+          <img src="layer5.png" alt="Layer 5" class="media-content" />
+        </div>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
