@@ -5,8 +5,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Undangan Pernikahan</title>
     <link rel="stylesheet" href="style.css" />
+    <!-- META TAG OPEN GRAPH (PRATINJAU WA / SOSMED) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="The Wedding of Windi & Fikri" />
+    <meta
+      property="og:description"
+      content="Tanpa mengurangi rasa hormat, kami mengundang Bapak/Ibu/Saudara/i untuk hadir di acara pernikahan kami."
+    />
+    <meta
+      property="og:url"
+      content="https://hlidesign17-ux.github.io/undangan-pernikahan-windi-fikri/"
+    />
+    <meta
+      property="og:image"
+      content="https://hlidesign17-ux.github.io/undangan-pernikahan-windi-fikri/cover.png"
+    />
+
+    <!-- Khusus pratinjau Twitter/X -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="The Wedding of Windi & Fikri" />
+    <meta
+      name="twitter:description"
+      content="Undangan Pernikahan Windi & Fikri"
+    />
+    <meta
+      name="twitter:image"
+      content="https://hlidesign17-ux.github.io/undangan-pernikahan-windi-fikri/cover.png"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   </head>
+
   <body class="no-scroll">
+    <!-- TOMBOL MUTE/UNMUTE AUDIO (DIPINDAHKAN KE SINI AGAR TIDAK TERSEMBUYI) -->
+    <button
+      id="btn-audio"
+      class="btn-audio-control hidden"
+      aria-label="Control Sound"
+    >
+      <span id="audio-icon">🔊</span>
+    </button>
+
     <!-- BACKGROUND UTAMA (cover.png) -->
     <img src="cover.png" alt="Background" class="fixed-background" />
 
@@ -50,7 +88,6 @@
 
           <!-- TOMBOL INTERAKTIF (GOOGLE MAPS & WHATSAPP) -->
           <div class="action-buttons">
-            <!-- Tombol Google Maps (Ganti URL dengan link Google Maps lokasi acara) -->
             <a
               href="https://maps.app.goo.gl/hNvb7a6AfmGczrTg9"
               target="_blank"
@@ -59,13 +96,12 @@
             >
               <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
                 <path
-                  d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"
+                  d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5-2.5z"
                 />
               </svg>
               <span>Buka Google Maps</span>
             </a>
 
-            <!-- Tombol WhatsApp RSVP (Ganti 628123456789 dengan nomor WA pengantin) -->
             <a
               href="https://wa.me/6285217155681?text=Halo,%20saya%20ingin%20mengonfirmasi%20kehadiran%20di%20acara%20pernikahan%20Windi%20%26%20Fikri."
               target="_blank"
@@ -79,6 +115,41 @@
               </svg>
               <span>RSVP via WhatsApp</span>
             </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- LAYER 6: BUKU TAMU & UCAPAN -->
+      <section class="layer-section">
+        <div class="media-wrapper comments-wrapper">
+          <div class="comments-container">
+            <h3 class="comments-title">Kirim Ucapan & Doa</h3>
+
+            <!-- FORM KIRIM UCAPAN -->
+            <form id="form-ucapan" class="ucapan-form">
+              <input
+                type="text"
+                id="input-nama"
+                placeholder="Nama Anda"
+                required
+                class="input-field"
+              />
+              <textarea
+                id="input-pesan"
+                placeholder="Tulis ucapan & doa..."
+                rows="3"
+                required
+                class="input-field"
+              ></textarea>
+              <button type="submit" id="btn-kirim" class="btn-submit">
+                Kirim Ucapan
+              </button>
+            </form>
+
+            <!-- DAFTAR UCAPAN YANG SUDAH MASUK -->
+            <div id="daftar-ucapan" class="ucapan-list">
+              <p class="loading-text">Memuat ucapan...</p>
+            </div>
           </div>
         </div>
       </section>

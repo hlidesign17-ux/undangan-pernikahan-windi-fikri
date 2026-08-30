@@ -1,47 +1,167 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const layer1 = document.getElementById('layer1');
-    const mainContent = document.getElementById('main-content');
-    const video = document.getElementById('my-video');
-    const btnOpen = document.getElementById('btn-open');
-    const sections = document.querySelectorAll('.layer-section');
+document.addEventListener("DOMContentLoaded", () => {
+  const layer1 = document.getElementById("layer1");
+  const mainContent = document.getElementById("main-content");
+  const video = document.getElementById("my-video");
+  const btnOpen = document.getElementById("btn-open");
+  const sections = document.querySelectorAll(".layer-section");
+  const btnAudio = document.getElementById("btn-audio");
+  const audioIcon = document.getElementById("audio-icon");
 
-    // 1. Fungsi Buka Undangan
-    function openInvitation() {
-        mainContent.classList.remove('hidden');
-        layer1.classList.add('fade-out');
-        document.body.classList.remove('no-scroll');
+  // 1. Fungsi Buka Undangan
+  function openInvitation() {
+    mainContent.classList.remove("hidden");
+    layer1.classList.add("fade-out");
+    document.body.classList.remove("no-scroll");
 
-        video.muted = false;
-        video.play().catch(error => {
-            console.log("Autoplay video gagal diputar:", error);
-        });
+    // LEPAS CLASS HIDDEN AGAR TOMBOL MUNCUL
+    if (btnAudio) {
+      btnAudio.classList.remove("hidden");
     }
 
-    btnOpen.addEventListener('click', (e) => {
-        e.stopPropagation();
-        openInvitation();
+    // Putar video
+    if (video) {
+      video.muted = false;
+      video.play().catch((error) => {
+        console.log("Autoplay video gagal diputar:", error);
+      });
+    }
+  }
+
+  // 2. Fitur Toggle Mute / Unmute
+  if (btnAudio && video && audioIcon) {
+    btnAudio.addEventListener("click", (e) => {
+      e.stopPropagation(); // Mencegah event klik menembus ke elemen lain
+      if (video.muted) {
+        video.muted = false;
+        audioIcon.textContent = "🔊";
+      } else {
+        video.muted = true;
+        audioIcon.textContent = "🔇";
+      }
     });
+  }
 
-    layer1.addEventListener('click', openInvitation);
-
-    // 2. Intersection Observer untuk Efek Transisi Soft antar Layer
-    const observerOptions = {
-        root: mainContent,
-        threshold: 0.5 // Aktif jika 50% area layer sudah masuk ke layar
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('active');
-            } else {
-                // Opsional: Hapus komentar di bawah jika ingin efek transisi diulang tiap kali scroll balik
-                // entry.target.classList.remove('active');
-            }
-        });
-    }, observerOptions);
-
-    sections.forEach(section => {
-        observer.observe(section);
+  // Event Listener Buka Undangan
+  if (btnOpen) {
+    btnOpen.addEventListener("click", (e) => {
+      e.stopPropagation();
+      openInvitation();
     });
+  }
+
+  if (layer1) {
+    layer1.addEventListener("click", openInvitation);
+  }
+
+  // 3. Intersection Observer untuk Transisi Layar
+  const observerOptions = {
+    root: mainContent,
+    threshold: 0.5,
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("active");
+      }
+    });
+  }, observerOptions);
+
+  sections.forEach((section) => {
+    observer.observe(section);
+  });
+
+  // =========================================================
+  // 4. INTEGRASI SUPABASE (BUKU TAMU - LAYER 6)
+  // =========================================================
+  const SUPABASE_URL = "https://wuvjloziovyalrtydkwi.supabase.co"; // Ganti dengan URL Supabase Anda
+  const SUPABASE_KEY = "sb_publishable_i60fg0v6h0ijbZnXa73m8A_yqZCeBLR"; // Ganti dengan Publishable Key (sb_publishable_...) Anda
+
+  // Inisialisasi Supabase Client jika SDK tersedia
+  if (typeof supabase !== "undefined") {
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    const formUcapan = document.getElementById("form-ucapan");
+    const inputNama = document.getElementById("input-nama");
+    const inputPesan = document.getElementById("input-pesan");
+    const daftarUcapan = document.getElementById("daftar-ucapan");
+
+    // Fungsi Ambil Ucapan dari Database Supabase
+    async function loadUcapan() {
+      if (!daftarUcapan) return;
+
+      const { data, error } = await supabaseClient
+        .from("Ucapan") // Memanggil nama tabel 'Ucapan'
+        .select("*")
+        .order("id", { ascending: false });
+
+      if (error) {
+        console.error("Gagal memuat ucapan:", error);
+        daftarUcapan.innerHTML = `<p class="loading-text">Gagal memuat ucapan.</p>`;
+        return;
+      }
+
+      if (!data || data.length === 0) {
+        daftarUcapan.innerHTML = `<p class="loading-text">Belum ada ucapan. Jadilah yang pertama!</p>`;
+        return;
+      }
+
+      daftarUcapan.innerHTML = data
+        .map(
+          (item) => `
+        <div class="ucapan-card">
+          <div class="ucapan-nama">${escapeHtml(item.nama || "Tamu")}</div>
+          <div class="ucapan-pesan">${escapeHtml(item.pesan || "")}</div>
+        </div>
+      `,
+        )
+        .join("");
+    }
+
+    // Prevents XSS Attacks
+    function escapeHtml(str) {
+      return str
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+    }
+
+    // Event Submit Form Ucapan
+    if (formUcapan) {
+      formUcapan.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const nama = inputNama.value.trim();
+        const pesan = inputPesan.value.trim();
+
+        if (!nama || !pesan) return;
+
+        const btnKirim = document.getElementById("btn-kirim");
+        if (btnKirim) {
+          btnKirim.disabled = true;
+          btnKirim.innerText = "Mengirim...";
+        }
+
+        const { error } = await supabaseClient
+          .from("Ucapan")
+          .insert([{ nama: nama, pesan: pesan }]);
+
+        if (btnKirim) {
+          btnKirim.disabled = false;
+          btnKirim.innerText = "Kirim Ucapan";
+        }
+
+        if (!error) {
+          inputNama.value = "";
+          inputPesan.value = "";
+          loadUcapan(); // Refresh tampilan ucapan secara instan
+        } else {
+          console.error("Error insert:", error);
+          alert("Gagal mengirim ucapan, silakan coba lagi.");
+        }
+      });
+
+      // Muat ucapan saat aplikasi pertama kali dijalankan
+      loadUcapan();
+    }
+  }
 });
