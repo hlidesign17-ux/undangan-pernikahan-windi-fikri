@@ -206,3 +206,73 @@ body.no-scroll {
     height: 85dvh;
   }
 }
+
+/* =========================================================
+   STYLE TOMBOL INTERAKTIF LAYER 5
+   ========================================================= */
+
+.layer-section .media-wrapper {
+  position: relative; /* Agar posisi tombol mengacu pada wadah media */
+}
+
+.action-buttons {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 80%;
+  max-width: 280px;
+  z-index: 20;
+
+  /* Animasi ikut memudar saat layer 5 aktif */
+  opacity: 0;
+  transition: opacity 0.8s ease 0.3s;
+}
+
+.layer-section.active .action-buttons {
+  opacity: 1;
+}
+
+/* Base style tombol */
+.btn-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px 20px;
+  border-radius: 30px;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #ffffff;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.btn-action:active {
+  transform: scale(0.95);
+}
+
+.btn-icon {
+  width: 20px;
+  height: 20px;
+}
+
+/* Warna Tombol Google Maps (Tema Gelap Glass / Merah Accent) */
+.btn-maps {
+  background: rgba(219, 68, 85, 0.85);
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
+}
+
+/* Warna Tombol WhatsApp (Tema Hijau WA Glass) */
+.btn-wa {
+  background: rgba(37, 211, 102, 0.85);
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
+}
