@@ -164,8 +164,6 @@
       <!-- LAYER 4: WEBAR PHOTOBOOTH FULLSCREEN -->
       <section class="layer-section" id="layer4">
         <div class="media-wrapper layer4-wrapper">
-          <img src="layer4.png" alt="Layer 4" class="media-content" />
-
           <div class="layer4-overlay">
             <div class="layer4-glass-frame">
               <h2 class="ar-title">Foto Bersama</h2>
@@ -176,7 +174,7 @@
 
               <!-- Tombol Utama Pembuka Kamera Fullscreen -->
               <button id="btn-open-ar" class="btn-ar btn-gold">
-                📷 Buka Kamera AR
+                Silahkan Buka Kamera AR
               </button>
             </div>
           </div>
@@ -184,16 +182,16 @@
 
         <!-- POPUP KAMERA FULLSCREEN -->
         <div id="ar-popup" class="ar-popup-fullscreen hidden">
-          <!-- Live Video Stream Kamera -->
+          <!-- Live Video Stream Kamera (Contain = No Zoom) -->
           <video id="webcam" autoplay playsinline muted></video>
 
-          <!-- Overlay Frame Minang 9:16 -->
+          <!-- Overlay Frame Minang 9:16 Pas -->
           <img src="frame-minang.png" id="ar-frame" alt="Frame Minang" />
 
           <!-- Canvas Tersembunyi untuk Capture Foto HD -->
           <canvas id="ar-canvas" style="display: none"></canvas>
 
-          <!-- Control Bar di Bawah Layar Kamera -->
+          <!-- Control Bar Kamera -->
           <div class="ar-camera-bar">
             <button id="btn-close-ar" class="cam-icon-btn" title="Tutup">
               ❌
@@ -216,6 +214,9 @@
               download="Foto-Minang-Windi-Fikri.png"
               >📥 Unduh Foto</a
             >
+            <button id="btn-retake" class="btn-ar btn-gold hidden">
+              🔄 Foto Ulang
+            </button>
           </div>
         </div>
       </section>

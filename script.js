@@ -223,7 +223,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // =========================================================
-  // 3.8. LOGIKA WEBAR FULLSCREEN PHOTOBOOTH NO-STRETCH (LAYER 4)
+  // LOGIKA WEBAR FULLSCREEN PHOTOBOOTH ANTI-STRETCH (LAYER 4)
   // =========================================================
   const arPopup = document.getElementById("ar-popup");
   const webcamElement = document.getElementById("webcam");
@@ -235,27 +235,25 @@ document.addEventListener("DOMContentLoaded", () => {
   const btnSwitchCam = document.getElementById("btn-switch-cam");
   const btnCapture = document.getElementById("btn-capture");
   const btnDownload = document.getElementById("btn-download");
+  const btnRetake = document.getElementById("btn-retake");
 
   let currentStream = null;
-  let currentFacingMode = "user"; // Default: Kamera Depan
+  let currentFacingMode = "user";
 
-  // 1. Fungsi Buka Kamera (Widescreen HD 1080x1920)
   async function startCamera() {
     if (currentStream) {
       currentStream.getTracks().forEach((track) => track.stop());
     }
 
-    const constraints = {
-      video: {
-        facingMode: currentFacingMode,
-        width: { ideal: 1080 },
-        height: { ideal: 1920 },
-      },
-      audio: false,
-    };
-
     try {
-      currentStream = await navigator.mediaDevices.getUserMedia(constraints);
+      currentStream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          facingMode: currentFacingMode,
+          width: { ideal: 1080 },
+          height: { ideal: 1920 },
+        },
+        audio: false,
+      });
       webcamElement.srcObject = currentStream;
 
       if (currentFacingMode === "user") {
@@ -266,22 +264,21 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (err) {
       console.error("Gagal membuka kamera:", err);
       alert(
-        "Tidak dapat mengakses kamera. Pastikan izin kamera telah diberikan.",
+        "Tidak dapat mengakses kamera. Pastikan izin kamera telah diizinkan.",
       );
     }
   }
 
-  // Buka Popup Fullscreen Kamera
   if (btnOpenAr) {
     btnOpenAr.addEventListener("click", () => {
       arPopup.classList.remove("hidden");
       btnDownload.classList.add("hidden");
+      btnRetake.classList.add("hidden");
       btnCapture.classList.remove("hidden");
       startCamera();
     });
   }
 
-  // Tutup Kamera
   if (btnCloseAr) {
     btnCloseAr.addEventListener("click", () => {
       arPopup.classList.add("hidden");
@@ -291,7 +288,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Switch Kamera (Depan / Belakang)
   if (btnSwitchCam) {
     btnSwitchCam.addEventListener("click", () => {
       currentFacingMode = currentFacingMode === "user" ? "environment" : "user";
@@ -299,43 +295,40 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // 2. AMBIL FOTO HD 9:16 TANPA STRETCH / GEPENG
+  // AMBIL FOTO HD 9:16 ANTI-STRETCH
   if (btnCapture) {
     btnCapture.addEventListener("click", () => {
       if (!webcamElement.srcObject) return;
 
       const context = arCanvas.getContext("2d");
 
-      // Ukuran Canvas Target Murni 9:16 HD (1080 x 1920 px)
+      // Set Target Canvas 9:16 HD (1080 x 1920 px)
       const targetWidth = 1080;
       const targetHeight = 1920;
       arCanvas.width = targetWidth;
       arCanvas.height = targetHeight;
 
-      // Dimensi Asli Video dari Sensor Kamera HP
       const videoWidth = webcamElement.videoWidth;
       const videoHeight = webcamElement.videoHeight;
 
-      // HITUNG PERBANDINGAN DAN PENGEMBALIAN CROP CENTER (ANTI-STRETCH)
-      const targetAspect = targetWidth / targetHeight; // 9 / 16 = 0.5625
+      // Kalkulasi Pemotongan Tengah Proporsional
+      const targetAspect = targetWidth / targetHeight;
       const videoAspect = videoWidth / videoHeight;
 
-      let sourceX = 0;
-      let sourceY = 0;
-      let sourceWidth = videoWidth;
-      let sourceHeight = videoHeight;
+      let sourceX = 0,
+        sourceY = 0,
+        sourceWidth = videoWidth,
+        sourceHeight = videoHeight;
 
       if (videoAspect > targetAspect) {
-        // Video terlalu lebar -> Potong sisi kiri & kanan
         sourceWidth = videoHeight * targetAspect;
         sourceX = (videoWidth - sourceWidth) / 2;
       } else {
-        // Video terlalu tinggi -> Potong sisi atas & bawah
         sourceHeight = videoWidth / targetAspect;
         sourceY = (videoHeight - sourceHeight) / 2;
       }
 
-      // Render Gambar Kamera dengan Pemotongan Tengah Proporsional
+      // Render Video Ke Canvas
       context.save();
       if (currentFacingMode === "user") {
         context.translate(targetWidth, 0);
@@ -347,24 +340,32 @@ document.addEventListener("DOMContentLoaded", () => {
         sourceX,
         sourceY,
         sourceWidth,
-        sourceHeight, // Area Asli yang Dipotong dari Kamera
+        sourceHeight,
         0,
         0,
         targetWidth,
-        targetHeight, // Dimensi Canvas Target 9:16
+        targetHeight,
       );
       context.restore();
 
-      // Render Overlay Frame Minang tepat di atas foto
+      // Render Frame Minang PNG
       context.drawImage(arFrame, 0, 0, targetWidth, targetHeight);
 
-      // Siapkan File Download PNG Resolusi Tinggi
-      const dataURL = arCanvas.toDataURL("image/png", 1.0);
-      btnDownload.href = dataURL;
+      // Buat Link Download PNG Kualitas Tinggi
+      btnDownload.href = arCanvas.toDataURL("image/png", 1.0);
 
-      // Tampilkan Tombol Unduh Foto
+      // Sembunyikan tombol capture & tampilkan tombol unduh
       btnCapture.classList.add("hidden");
       btnDownload.classList.remove("hidden");
+      btnRetake.classList.remove("hidden");
+    });
+  }
+
+  if (btnRetake) {
+    btnRetake.addEventListener("click", () => {
+      btnDownload.classList.add("hidden");
+      btnRetake.classList.add("hidden");
+      btnCapture.classList.remove("hidden");
     });
   }
 });
