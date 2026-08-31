@@ -221,4 +221,67 @@ document.addEventListener("DOMContentLoaded", () => {
       loadUcapan();
     }
   }
+
+  // =========================================================
+  // 3.8. LOGIKA WEBAR PHOTOBOOTH (LAYER 4)
+  // =========================================================
+  const webcamElement = document.getElementById("webcam");
+  const arFrame = document.getElementById("ar-frame");
+  const arCanvas = document.getElementById("ar-canvas");
+  const btnStartCam = document.getElementById("btn-start-cam");
+  const btnCapture = document.getElementById("btn-capture");
+  const btnDownload = document.getElementById("btn-download");
+
+  let stream = null;
+
+  if (btnStartCam && webcamElement) {
+    btnStartCam.addEventListener("click", async () => {
+      try {
+        // Minta akses kamera HP (Kamera depan preferred)
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: "user" },
+          audio: false,
+        });
+
+        webcamElement.srcObject = stream;
+
+        // Atur tombol
+        btnStartCam.classList.add("hidden");
+        btnCapture.classList.remove("hidden");
+      } catch (err) {
+        console.error("Gagal mengakses kamera:", err);
+        alert("Izin kamera ditolak atau perangkat tidak mendukung.");
+      }
+    });
+  }
+
+  if (btnCapture) {
+    btnCapture.addEventListener("click", () => {
+      if (!webcamElement.srcObject) return;
+
+      const context = arCanvas.getContext("2d");
+
+      // Samakan ukuran canvas dengan video
+      arCanvas.width = webcamElement.videoWidth || 640;
+      arCanvas.height = webcamElement.videoHeight || 480;
+
+      // 1. Gambar Hasil Kamera ke Canvas (efek cermin diproses)
+      context.save();
+      context.translate(arCanvas.width, 0);
+      context.scale(-1, 1);
+      context.drawImage(webcamElement, 0, 0, arCanvas.width, arCanvas.height);
+      context.restore();
+
+      // 2. Tumpuk Frame Minang (frame-minang.png) di atas foto canvas
+      context.drawImage(arFrame, 0, 0, arCanvas.width, arCanvas.height);
+
+      // 3. Convert ke Format Gambar & Pasang ke Tombol Unduh
+      const dataURL = arCanvas.toDataURL("image/png");
+      btnDownload.href = dataURL;
+
+      // Tampilkan tombol unduh
+      btnCapture.innerText = "🔄 Foto Ulang";
+      btnDownload.classList.remove("hidden");
+    });
+  }
 });

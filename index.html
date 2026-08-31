@@ -161,10 +161,48 @@
         </div>
       </section>
 
-      <!-- LAYER 4 -->
-      <section class="layer-section">
-        <div class="media-wrapper">
+      <!-- LAYER 4: WEBAR PHOTOBOOTH -->
+      <section class="layer-section" id="layer4">
+        <div class="media-wrapper layer4-wrapper">
+          <!-- Background Layer 4 -->
           <img src="layer4.png" alt="Layer 4" class="media-content" />
+
+          <!-- OVERLAY KONTEN WEBAR -->
+          <div class="layer4-overlay">
+            <div class="layer4-glass-frame">
+              <h2 class="ar-title">Foto Bersama</h2>
+              <p class="ar-subtitle">
+                Abadikan momen serumu dengan Frame Minang khusus pernikahan
+                kami!
+              </p>
+
+              <!-- AREA DISPLAY KAMERA / CANVAS -->
+              <div class="webcam-container">
+                <!-- Video Feed Kamera HP -->
+                <video id="webcam" autoplay playsinline muted></video>
+                <!-- Frame Overlay Minang -->
+                <img src="frame-minang.png" id="ar-frame" alt="Frame Minang" />
+                <!-- Canvas Tersembunyi untuk Proses Capture Foto -->
+                <canvas id="ar-canvas" style="display: none"></canvas>
+              </div>
+
+              <!-- KONTROL TOMBOL -->
+              <div class="ar-controls">
+                <button id="btn-start-cam" class="btn-ar">
+                  📷 Buka Kamera
+                </button>
+                <button id="btn-capture" class="btn-ar btn-gold hidden">
+                  📸 Ambil Foto
+                </button>
+                <a
+                  id="btn-download"
+                  class="btn-ar btn-green hidden"
+                  download="Foto-Pernikahan-Windi-Fikri.png"
+                  >📥 Unduh Foto</a
+                >
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
