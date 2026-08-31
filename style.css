@@ -77,8 +77,8 @@ body.no-scroll {
 
 /* 1. TOMBOL BUKA UNDANGAN (EFEK GLASS) */
 .btn-open {
-  margin-top: 172px; /* Jarak ke atas */
-  margin-bottom: 3px; /* Jarak ke kotak nama di bawahnya */
+  margin-top: 500px; /* Jarak ke atas */
+  margin-bottom: 200px; /* Jarak ke kotak nama di bawahnya */
   padding: 14px 32px;
   font-size: 1rem;
   font-weight: 600;
