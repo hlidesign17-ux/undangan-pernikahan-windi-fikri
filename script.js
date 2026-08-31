@@ -89,6 +89,47 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // =========================================================
+  // 3.5. LOGIKA HITUNG MUNDUR (COUNTDOWN LAYER 3 - 25 OKTOBER 2026)
+  // =========================================================
+  const targetDate = new Date("October 25, 2026 08:00:00").getTime();
+
+  function updateCountdown() {
+    const now = new Date().getTime();
+    const difference = targetDate - now;
+
+    if (difference < 0) {
+      const countdownContainer = document.getElementById("countdown");
+      if (countdownContainer) {
+        countdownContainer.innerHTML =
+          "<p style='color:#5C2C16; font-weight:600;'>Acara Telah Berlangsung</p>";
+      }
+      return;
+    }
+
+    const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+    const hours = Math.floor(
+      (difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+    );
+    const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+    const elDays = document.getElementById("days");
+    const elHours = document.getElementById("hours");
+    const elMinutes = document.getElementById("minutes");
+    const elSeconds = document.getElementById("seconds");
+
+    if (elDays) elDays.textContent = days < 10 ? "0" + days : days;
+    if (elHours) elHours.textContent = hours < 10 ? "0" + hours : hours;
+    if (elMinutes)
+      elMinutes.textContent = minutes < 10 ? "0" + minutes : minutes;
+    if (elSeconds)
+      elSeconds.textContent = seconds < 10 ? "0" + seconds : seconds;
+  }
+
+  setInterval(updateCountdown, 1000);
+  updateCountdown();
+
+  // =========================================================
   // 4. INTEGRASI SUPABASE (BUKU TAMU - LAYER 6)
   // =========================================================
   const SUPABASE_URL = "https://wuvjloziovyalrtydkwi.supabase.co";
