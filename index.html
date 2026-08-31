@@ -161,62 +161,47 @@
         </div>
       </section>
 
-      <!-- LAYER 4: WEBAR PHOTOBOOTH FULLSCREEN -->
+      <!-- LAYER 4: PHOTOBOOTH KAMERA BAWAAN -->
       <section class="layer-section" id="layer4">
         <div class="media-wrapper layer4-wrapper">
           <div class="layer4-overlay">
             <div class="layer4-glass-frame">
               <h2 class="ar-title">Foto Bersama</h2>
               <p class="ar-subtitle">
-                Abadikan momen serumu dengan Frame Minang khusus pernikahan
-                kami!
+                Abadikan momenmu dengan Frame Minang khusus pernikahan kami!
               </p>
 
-              <!-- Tombol Utama Pembuka Kamera Fullscreen -->
-              <button id="btn-open-ar" class="btn-ar btn-gold">
-                Silahkan Buka Kamera AR
-              </button>
+              <!-- Preview Foto Hasil Gabungan dengan Frame -->
+              <div id="photo-preview-container" class="preview-box hidden">
+                <img id="photo-result" alt="Hasil Foto" />
+              </div>
+
+              <!-- Input File Tersembunyi (Memicu Kamera Bawaan HP) -->
+              <input
+                type="file"
+                id="native-camera-input"
+                accept="image/*"
+                capture="user"
+                style="display: none"
+              />
+
+              <!-- Canvas Tersembunyi untuk Prosessing Canvas HD -->
+              <canvas id="ar-canvas" style="display: none"></canvas>
+
+              <!-- Tombol Kontrol -->
+              <div class="ar-controls-wrapper">
+                <button id="btn-trigger-cam" class="btn-ar btn-gold">
+                  Ambil Foto di Galerimu
+                </button>
+                <a
+                  id="btn-download"
+                  class="btn-ar btn-green hidden"
+                  download="Foto-Minang-Windi-Fikri.png"
+                >
+                  Unduh Foto</a
+                >
+              </div>
             </div>
-          </div>
-        </div>
-
-        <!-- POPUP KAMERA FULLSCREEN -->
-        <div id="ar-popup" class="ar-popup-fullscreen hidden">
-          <!-- Live Video Stream Kamera (Contain = No Zoom) -->
-          <video id="webcam" autoplay playsinline muted></video>
-
-          <!-- Overlay Frame Minang 9:16 Pas -->
-          <img src="frame-minang.png" id="ar-frame" alt="Frame Minang" />
-
-          <!-- Canvas Tersembunyi untuk Capture Foto HD -->
-          <canvas id="ar-canvas" style="display: none"></canvas>
-
-          <!-- Control Bar Kamera -->
-          <div class="ar-camera-bar">
-            <button id="btn-close-ar" class="cam-icon-btn" title="Tutup">
-              ❌
-            </button>
-            <button
-              id="btn-switch-cam"
-              class="cam-icon-btn"
-              title="Ganti Kamera"
-            >
-              🔄
-            </button>
-            <button
-              id="btn-capture"
-              class="btn-shutter"
-              title="Ambil Foto"
-            ></button>
-            <a
-              id="btn-download"
-              class="btn-ar btn-green hidden"
-              download="Foto-Minang-Windi-Fikri.png"
-              >📥 Unduh Foto</a
-            >
-            <button id="btn-retake" class="btn-ar btn-gold hidden">
-              🔄 Foto Ulang
-            </button>
           </div>
         </div>
       </section>

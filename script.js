@@ -223,149 +223,86 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // =========================================================
-  // LOGIKA WEBAR FULLSCREEN PHOTOBOOTH ANTI-STRETCH (LAYER 4)
+  // LOGIKA NATIVE CAMERA PHOTOBOOTH (LAYER 4)
   // =========================================================
-  const arPopup = document.getElementById("ar-popup");
-  const webcamElement = document.getElementById("webcam");
-  const arFrame = document.getElementById("ar-frame");
+  const btnTriggerCam = document.getElementById("btn-trigger-cam");
+  const nativeCameraInput = document.getElementById("native-camera-input");
   const arCanvas = document.getElementById("ar-canvas");
-
-  const btnOpenAr = document.getElementById("btn-open-ar");
-  const btnCloseAr = document.getElementById("btn-close-ar");
-  const btnSwitchCam = document.getElementById("btn-switch-cam");
-  const btnCapture = document.getElementById("btn-capture");
+  const photoPreviewContainer = document.getElementById(
+    "photo-preview-container",
+  );
+  const photoResult = document.getElementById("photo-result");
   const btnDownload = document.getElementById("btn-download");
-  const btnRetake = document.getElementById("btn-retake");
 
-  let currentStream = null;
-  let currentFacingMode = "user";
+  // Load Frame Minang PNG ke dalam memori
+  const frameImage = new Image();
+  frameImage.src = "frame-minang.png";
 
-  async function startCamera() {
-    if (currentStream) {
-      currentStream.getTracks().forEach((track) => track.stop());
+  // Klik tombol memicu pembukaan kamera bawaan HP
+  if (btnTriggerCam && nativeCameraInput) {
+    btnTriggerCam.addEventListener("click", () => {
+      nativeCameraInput.click();
+    });
+
+    nativeCameraInput.addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const userImg = new Image();
+        userImg.onload = () => {
+          // Gabungkan Foto Tamu + Frame Minang secara matematis
+          processPhotoboothImage(userImg);
+        };
+        userImg.src = event.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function processPhotoboothImage(userImg) {
+    const ctx = arCanvas.getContext("2d");
+
+    // Paksa Output Canvas Berorientasi Portrait 9:16 HD (1080 x 1920 px)
+    const targetW = 1080;
+    const targetH = 1920;
+    arCanvas.width = targetW;
+    arCanvas.height = targetH;
+
+    // Hitung Crop Tengah Proporsional (Anti-Stretch)
+    const targetAspect = targetW / targetH;
+    const imgAspect = userImg.width / userImg.height;
+
+    let srcX = 0,
+      srcY = 0,
+      srcW = userImg.width,
+      srcH = userImg.height;
+
+    if (imgAspect > targetAspect) {
+      srcW = userImg.height * targetAspect;
+      srcX = (userImg.width - srcW) / 2;
+    } else {
+      srcH = userImg.width / targetAspect;
+      srcY = (userImg.height - srcH) / 2;
     }
 
-    try {
-      currentStream = await navigator.mediaDevices.getUserMedia({
-        video: {
-          facingMode: currentFacingMode,
-          width: { ideal: 1080 },
-          height: { ideal: 1920 },
-        },
-        audio: false,
-      });
-      webcamElement.srcObject = currentStream;
+    // 1. Gambar Foto dari Kamera HP di Canvas
+    ctx.drawImage(userImg, srcX, srcY, srcW, srcH, 0, 0, targetW, targetH);
 
-      if (currentFacingMode === "user") {
-        webcamElement.classList.add("mirror");
-      } else {
-        webcamElement.classList.remove("mirror");
-      }
-    } catch (err) {
-      console.error("Gagal membuka kamera:", err);
-      alert(
-        "Tidak dapat mengakses kamera. Pastikan izin kamera telah diizinkan.",
-      );
-    }
-  }
+    // 2. Tumpuk dengan Frame Minang PNG di atasnya
+    ctx.drawImage(frameImage, 0, 0, targetW, targetH);
 
-  if (btnOpenAr) {
-    btnOpenAr.addEventListener("click", () => {
-      arPopup.classList.remove("hidden");
-      btnDownload.classList.add("hidden");
-      btnRetake.classList.add("hidden");
-      btnCapture.classList.remove("hidden");
-      startCamera();
-    });
-  }
+    // 3. Export Ke format PNG
+    const resultDataURL = arCanvas.toDataURL("image/png", 1.0);
 
-  if (btnCloseAr) {
-    btnCloseAr.addEventListener("click", () => {
-      arPopup.classList.add("hidden");
-      if (currentStream) {
-        currentStream.getTracks().forEach((track) => track.stop());
-      }
-    });
-  }
+    // Tampilkan hasil di layar UI
+    photoResult.src = resultDataURL;
+    photoPreviewContainer.classList.remove("hidden");
 
-  if (btnSwitchCam) {
-    btnSwitchCam.addEventListener("click", () => {
-      currentFacingMode = currentFacingMode === "user" ? "environment" : "user";
-      startCamera();
-    });
-  }
-
-  // AMBIL FOTO HD 9:16 ANTI-STRETCH
-  if (btnCapture) {
-    btnCapture.addEventListener("click", () => {
-      if (!webcamElement.srcObject) return;
-
-      const context = arCanvas.getContext("2d");
-
-      // Set Target Canvas 9:16 HD (1080 x 1920 px)
-      const targetWidth = 1080;
-      const targetHeight = 1920;
-      arCanvas.width = targetWidth;
-      arCanvas.height = targetHeight;
-
-      const videoWidth = webcamElement.videoWidth;
-      const videoHeight = webcamElement.videoHeight;
-
-      // Kalkulasi Pemotongan Tengah Proporsional
-      const targetAspect = targetWidth / targetHeight;
-      const videoAspect = videoWidth / videoHeight;
-
-      let sourceX = 0,
-        sourceY = 0,
-        sourceWidth = videoWidth,
-        sourceHeight = videoHeight;
-
-      if (videoAspect > targetAspect) {
-        sourceWidth = videoHeight * targetAspect;
-        sourceX = (videoWidth - sourceWidth) / 2;
-      } else {
-        sourceHeight = videoWidth / targetAspect;
-        sourceY = (videoHeight - sourceHeight) / 2;
-      }
-
-      // Render Video Ke Canvas
-      context.save();
-      if (currentFacingMode === "user") {
-        context.translate(targetWidth, 0);
-        context.scale(-1, 1);
-      }
-
-      context.drawImage(
-        webcamElement,
-        sourceX,
-        sourceY,
-        sourceWidth,
-        sourceHeight,
-        0,
-        0,
-        targetWidth,
-        targetHeight,
-      );
-      context.restore();
-
-      // Render Frame Minang PNG
-      context.drawImage(arFrame, 0, 0, targetWidth, targetHeight);
-
-      // Buat Link Download PNG Kualitas Tinggi
-      btnDownload.href = arCanvas.toDataURL("image/png", 1.0);
-
-      // Sembunyikan tombol capture & tampilkan tombol unduh
-      btnCapture.classList.add("hidden");
-      btnDownload.classList.remove("hidden");
-      btnRetake.classList.remove("hidden");
-    });
-  }
-
-  if (btnRetake) {
-    btnRetake.addEventListener("click", () => {
-      btnDownload.classList.add("hidden");
-      btnRetake.classList.add("hidden");
-      btnCapture.classList.remove("hidden");
-    });
+    // Pasang ke tombol download
+    btnDownload.href = resultDataURL;
+    btnDownload.classList.remove("hidden");
+    btnTriggerCam.innerText = "🔄 Ambil Ulang Foto";
   }
 });

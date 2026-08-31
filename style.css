@@ -722,7 +722,7 @@ body.no-scroll {
 }
 
 /* =========================================================
-   STYLE LAYER 4 (NO-ZOOM & NO-STRETCH PHOTOBOOTH)
+   STYLE LAYER 4 (NATIVE CAMERA PHOTOBOOTH)
    ========================================================= */
 
 .layer4-wrapper {
@@ -748,7 +748,7 @@ body.no-scroll {
 .layer4-glass-frame {
   width: 88%;
   max-width: 320px;
-  padding: 24px 18px;
+  padding: 20px 16px;
   background: rgba(255, 250, 245, 0.55);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
@@ -757,111 +757,40 @@ body.no-scroll {
   text-align: center;
 }
 
-.ar-title {
-  font-family: "Poppins", sans-serif;
-  font-weight: 700;
-  color: #5c2c16;
-  font-size: 1.15rem;
-  letter-spacing: 2px;
-  margin: 0 0 6px 0;
-  text-transform: uppercase;
-}
-
-.ar-subtitle {
-  font-family: "Poppins", sans-serif;
-  font-size: 0.75rem;
-  color: #4a3b32;
-  margin: 0 0 16px 0;
-}
-
-/* POPUP FULLSCREEN KAMERA */
-.ar-popup-fullscreen {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: #000000;
-  z-index: 99999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+/* WADAH PREVIEW FOTO 9:16 */
+.preview-box {
+  width: 100%;
+  aspect-ratio: 9 / 16;
+  border-radius: 12px;
   overflow: hidden;
+  margin-bottom: 14px;
+  border: 2px solid rgba(92, 44, 22, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* Video Kamera (Contain = Menjaga Sudut Pandang Kamera Utuh Tanpa Zoom) */
-#webcam {
+#photo-result {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  background: #000;
+  display: block;
 }
 
-#webcam.mirror {
-  transform: scaleX(-1);
-}
-
-/* Frame Minang Presisi Murni 9:16 Menutupi Layar Kamera */
-#ar-frame {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: fill;
-  pointer-events: none;
-  z-index: 100000;
-}
-
-/* KONTROL KAMERA DI BAWAH LAYAR */
-.ar-camera-bar {
-  position: absolute;
-  bottom: 25px;
-  left: 0;
-  width: 100%;
+.ar-controls-wrapper {
   display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-  z-index: 100001;
-  padding: 0 16px;
-  box-sizing: border-box;
-}
-
-.btn-shutter {
-  width: 66px;
-  height: 66px;
-  border-radius: 50%;
-  background: #ffffff;
-  border: 4px solid rgba(212, 175, 55, 0.9);
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
-  cursor: pointer;
-  transition: transform 0.1s ease;
-}
-
-.btn-shutter:active {
-  transform: scale(0.88);
-}
-
-.cam-icon-btn {
-  background: rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  color: #fff;
-  border-radius: 50%;
-  width: 44px;
-  height: 44px;
-  font-size: 1.1rem;
-  cursor: pointer;
-  backdrop-filter: blur(4px);
+  flex-direction: column;
+  gap: 10px;
 }
 
 .btn-ar {
-  padding: 10px 18px;
+  width: 100%;
+  padding: 12px 18px;
   border: none;
   border-radius: 10px;
   font-family: "Poppins", sans-serif;
   font-weight: 600;
   font-size: 0.85rem;
   cursor: pointer;
+  box-sizing: border-box;
 }
 
 .btn-gold {
