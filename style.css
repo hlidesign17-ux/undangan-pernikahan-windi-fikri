@@ -722,14 +722,13 @@ body.no-scroll {
 }
 
 /* =========================================================
-   STYLE LAYER 4 (REVISI PHOTOBOOTH & VIDEO 9:16 HD)
+   STYLE LAYER 4 (FULLSCREEN WEBAR PHOTOBOOTH)
    ========================================================= */
 
 .layer4-wrapper {
   position: relative;
   width: 100%;
   height: 100%;
-  overflow: hidden;
 }
 
 .layer4-overlay {
@@ -741,153 +740,121 @@ body.no-scroll {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 12px;
+  padding: 16px;
   box-sizing: border-box;
-  overflow-y: auto;
   z-index: 2;
 }
 
 .layer4-glass-frame {
-  width: 92%;
+  width: 88%;
   max-width: 320px;
-  padding: 14px 12px;
+  padding: 24px 18px;
   background: rgba(255, 250, 245, 0.55);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   border: 1px solid rgba(139, 69, 19, 0.25);
-  border-radius: 18px;
-  box-shadow: 0 10px 30px rgba(74, 46, 27, 0.15);
+  border-radius: 20px;
   text-align: center;
 }
 
-.ar-title {
-  font-family: "Poppins", sans-serif;
-  font-weight: 700;
-  color: #5c2c16;
-  font-size: 1.05rem;
-  letter-spacing: 1.5px;
-  margin: 0 0 2px 0;
-  text-transform: uppercase;
-}
-
-.ar-subtitle {
-  font-family: "Poppins", sans-serif;
-  font-size: 0.68rem;
-  color: #4a3b32;
-  margin: 0 0 8px 0;
-}
-
-/* WADAH KAMERA: KUNCI RASIO 9:16 PRESISI */
-.webcam-container {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 9 / 16; /* Menjaga rasio 9:16 konsisten di semua layar HP */
-  background: #000;
-  border-radius: 12px;
+/* POPUP KAMERA FULLSCREEN MEMENUHI LAYAR HP */
+.ar-popup-fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #000000;
+  z-index: 99999; /* Selalu di paling depan */
+  display: flex;
+  align-items: center;
+  justify-content: center;
   overflow: hidden;
-  border: 2px solid rgba(92, 44, 22, 0.4);
-  margin-bottom: 8px;
 }
 
+/* Video Live Feed Kamera Memenuhi Layar */
 #webcam {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Mengisi penuh frame tanpa merusak proporsi */
+  object-fit: cover; /* Video pas tanpa bar hitam */
 }
 
-/* Cermin hanya untuk kamera depan */
 #webcam.mirror {
   transform: scaleX(-1);
 }
 
+/* Frame Minang Presisi Menumpuk Layar Kamera */
 #ar-frame {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  object-fit: fill; /* Memaksa frame-minang.png mengisi penuh 9:16 */
+  object-fit: fill; /* Memaksa 9:16 menutupi layar */
   pointer-events: none;
-  z-index: 3;
+  z-index: 100000;
 }
 
-/* Tombol Flip Kamera di Pojok Atas Kamera */
-.btn-flip {
+/* CONTROL BAR DI BAWAH (EFEK KAMERA INSTAGRAM) */
+.ar-camera-bar {
   position: absolute;
-  top: 10px;
-  right: 10px;
-  z-index: 4;
-  background: rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.6);
-  color: white;
-  border-radius: 50%;
-  width: 36px;
-  height: 36px;
-  font-size: 1rem;
-  cursor: pointer;
+  bottom: 30px;
+  left: 0;
+  width: 100%;
   display: flex;
+  justify-content: space-evenly;
   align-items: center;
-  justify-content: center;
+  z-index: 100001;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+/* Tombol Shutter Bulat (Seperi Kamera HP) */
+.btn-shutter {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 4px solid rgba(212, 175, 55, 0.9);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.btn-shutter:active {
+  transform: scale(0.88);
+}
+
+.cam-icon-btn {
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: #fff;
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  font-size: 1.1rem;
+  cursor: pointer;
   backdrop-filter: blur(4px);
 }
 
-/* Tab Mode Foto / Video */
-.mode-selector {
-  display: flex;
-  justify-content: center;
-  gap: 6px;
-  margin-bottom: 8px;
-}
-
-.mode-btn {
-  background: rgba(92, 44, 22, 0.15);
-  border: 1px solid rgba(92, 44, 22, 0.3);
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 0.72rem;
-  font-family: "Poppins", sans-serif;
-  font-weight: 600;
-  color: #5c2c16;
-  cursor: pointer;
-}
-
-.mode-btn.active {
-  background: #5c2c16;
-  color: #ffffff;
-}
-
-/* Kontrol Tombol Action */
-.ar-controls {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
 .btn-ar {
-  width: 100%;
-  padding: 8px;
+  padding: 12px 20px;
   border: none;
-  border-radius: 8px;
-  background: #5c2c16;
-  color: #ffffff;
+  border-radius: 12px;
   font-family: "Poppins", sans-serif;
   font-weight: 600;
-  font-size: 0.78rem;
+  font-size: 0.9rem;
   cursor: pointer;
 }
 
 .btn-gold {
-  background: #d4af37;
-  color: #2d1810;
+  background: #5c2c16;
+  color: #ffffff;
 }
 .btn-green {
   background: #2e7d32;
   color: #ffffff;
   text-decoration: none;
-}
-.btn-red {
-  background: #c62828;
-  color: #ffffff;
 }
 
 .hidden {
