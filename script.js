@@ -7,6 +7,23 @@ document.addEventListener("DOMContentLoaded", () => {
   const btnAudio = document.getElementById("btn-audio");
   const audioIcon = document.getElementById("audio-icon");
 
+  // =========================================================
+  // 0. BACA PARAMETER NAMA TAMU DARI URL (?to=Nama atau ?p=Nama)
+  // =========================================================
+  const guestNameElement = document.getElementById("guest-name");
+  if (guestNameElement) {
+    const urlParams = new URLSearchParams(window.location.search);
+    const guestParam =
+      urlParams.get("to") || urlParams.get("p") || urlParams.get("nama");
+
+    if (guestParam) {
+      // Mengubah tanda + atau %20 di URL menjadi spasi
+      guestNameElement.textContent = decodeURIComponent(
+        guestParam.replace(/\+/g, " "),
+      );
+    }
+  }
+
   // 1. Fungsi Buka Undangan
   function openInvitation() {
     mainContent.classList.remove("hidden");
@@ -75,7 +92,6 @@ document.addEventListener("DOMContentLoaded", () => {
   // 4. INTEGRASI SUPABASE (BUKU TAMU - LAYER 6)
   // =========================================================
   const SUPABASE_URL = "https://wuvjloziovyalrtydkwi.supabase.co";
-  // Ganti dengan Kunci 'anon public' (diawali eyJhbGci...) dari menu Legacy API Keys Supabase Anda
   const SUPABASE_KEY =
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind1dmpsb3ppb3Z5YWxydHlka3dpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgxMTExOTUsImV4cCI6MjEwMzY4NzE5NX0.Yf8trBbAyeqhlZBGV5Vw8ifXNr-kyLlsU3OIzWYIVLk";
 
@@ -92,7 +108,6 @@ document.addEventListener("DOMContentLoaded", () => {
     async function loadUcapan() {
       if (!daftarUcapan) return;
 
-      // Mengambil data tanpa .order("id") karena tabel belum memiliki kolom id
       const { data, error } = await supabaseClient.from("Ucapan").select("*");
 
       if (error) {
@@ -106,7 +121,6 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      // Menggunakan .reverse() agar ucapan yang paling baru masuk muncul di bagian atas
       daftarUcapan.innerHTML = data
         .reverse()
         .map(
@@ -143,7 +157,6 @@ document.addEventListener("DOMContentLoaded", () => {
           btnKirim.innerText = "Mengirim...";
         }
 
-        // Memasukkan data ke kolom 'Nama' dan 'Pesan' (huruf kapital)
         const { error } = await supabaseClient
           .from("Ucapan")
           .insert([{ Nama: namaVal, Pesan: pesanVal }]);

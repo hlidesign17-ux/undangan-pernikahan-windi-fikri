@@ -60,32 +60,98 @@ body.no-scroll {
     visibility 1s ease;
 }
 
+/* =========================================================
+   PENGATURAN TATA LETAK & EFEK GLASS COVER (LAYER 1)
+   ========================================================= */
+
 .cover-content {
-  position: relative;
-  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Rata tengah secara horizontal */
+  justify-content: center; /* Rata tengah secara vertikal */
+  height: 100%; /* Mengisi penuh tinggi layar */
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
+/* 1. TOMBOL BUKA UNDANGAN (EFEK GLASS) */
 .btn-open {
+  margin-top: 172px; /* Jarak ke atas */
+  margin-bottom: 3px; /* Jarak ke kotak nama di bawahnya */
   padding: 14px 32px;
   font-size: 1rem;
   font-weight: 600;
   letter-spacing: 0.5px;
-  color: #fff;
-  background-color: rgba(0, 0, 0, 0.65);
-  border: 1.5px solid rgba(255, 255, 255, 0.85);
+  color: #ffffff;
+
+  /* Efek Kaca Transparan (Glassmorphism) */
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
   border-radius: 40px;
+
   cursor: pointer;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-  transition:
-    transform 0.2s ease,
-    background-color 0.2s ease;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+.btn-open:hover {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.6);
+  transform: translateY(-2px);
+  box-shadow:
+    0 12px 35px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
 }
 
 .btn-open:active {
-  transform: scale(0.94);
-  background-color: rgba(0, 0, 0, 0.85);
+  transform: scale(0.96) translateY(0);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* 2. KOTAK NAMA TAMU / RECIPIENT BOX (UKURAN KOMPAK & COMPACT) */
+.recipient-box {
+  padding: 8px 14px; /* Padding dipangkas agar kotak ringkas */
+
+  /* Efek Kaca Transparan (Glassmorphism) */
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 10px; /* Diperkecil agar serasi dengan kotaknya */
+
+  width: 65%; /* Diperkecil dari 78% */
+  max-width: 220px; /* Diperkecil dari 288px */
+  text-align: center;
+  color: #ffffff;
+  box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.3);
+}
+
+.recipient-label {
+  font-size: 0.65rem; /* Ukuran font dipangkas ringkas */
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0 0 2px 0;
+  letter-spacing: 0.2px;
+}
+
+.recipient-name {
+  font-size: 0.95rem; /* Ukuran nama diperkecil & pas */
+  font-weight: 700;
+  color: #ffffff;
+  margin: 2px 0;
+  word-break: break-word;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.recipient-sub {
+  font-size: 0.65rem;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 2px 0 0 0;
+  letter-spacing: 0.2px;
 }
 
 .layer-cover.fade-out {
@@ -449,4 +515,43 @@ body.no-scroll {
   color: rgba(255, 255, 255, 0.6);
   font-size: 0.85rem;
   text-align: center;
+}
+
+/* =========================================================
+   STYLE KEPADA YTH (NAMA TAMU COVER LAYER 1)
+   ========================================================= */
+
+.recipient-box {
+  margin-bottom: 24px;
+  padding: 14px 20px;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 12px;
+  width: 85%;
+  max-width: 320px;
+  text-align: center;
+  color: #ffffff;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+}
+
+.recipient-label {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0 0 6px 0;
+}
+
+.recipient-name {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 4px 0;
+  word-break: break-word;
+}
+
+.recipient-sub {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 6px 0 0 0;
 }
