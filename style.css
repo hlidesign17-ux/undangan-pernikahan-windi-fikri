@@ -555,3 +555,167 @@ body.no-scroll {
   color: rgba(255, 255, 255, 0.85);
   margin: 6px 0 0 0;
 }
+
+/* =========================================================
+   PERBAIKAN STYLE LAYER 3 (WARNA HARMONIS DENGAN LAYER3.PNG)
+   ========================================================= */
+
+/* .layer3-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+} */
+
+/* Overlay Penumpuk */
+.layer3-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  z-index: 2;
+}
+
+/* GLASS FRAME: Kaca Krem Warm Transparan */
+.layer3-glass-frame {
+  height: 95%;
+  width: 88%;
+  max-width: 320px;
+  padding: 22px 18px;
+
+  /* Latar Kaca Transparan Hangat yang Kontras */
+  background: rgba(255, 250, 245, 0.45);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+
+  /* Border Halus Berwarna Cokelat Terakota Transparan */
+  border: 1px solid rgba(139, 69, 19, 0.25);
+  border-radius: 20px;
+
+  /* Bayangan Halus */
+  box-shadow:
+    0 10px 30px rgba(74, 46, 27, 0.15),
+    inset 0 1px 1px rgba(255, 255, 255, 0.8);
+
+  text-align: center;
+  color: #333333;
+}
+
+/* Pembatas Garis Cokelat Halus */
+.divider-gold {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(92, 44, 22, 0.3),
+    transparent
+  );
+  margin: 14px 0;
+}
+
+/* 1. STYLING MEMPELAI */
+.section-title-etnik {
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  color: #5c2c16; /* Cokelat Terakota Pekat */
+  font-size: 1.15rem;
+  letter-spacing: 3px;
+  margin: 0 0 10px 0;
+  text-transform: uppercase;
+  text-shadow: none;
+}
+
+.couple-name {
+  font-family: "Playfair Display", serif;
+  font-weight: 700;
+  font-size: 1.35rem;
+  color: #2d1810; /* Cokelat Gelap Tegas */
+  margin: 4px 0 2px 0;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+.couple-parents {
+  font-family: "Poppins", sans-serif;
+  font-size: 0.7rem;
+  color: #4a3b32; /* Cokelat Sedang */
+  margin: 0;
+  font-style: italic;
+  font-weight: 400;
+}
+
+.couple-separator {
+  font-family: "Playfair Display", serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #8b4513;
+  margin: 4px 0;
+}
+
+/* 2. STYLING JADWAL ACARA */
+.event-title {
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  color: #5c2c16;
+  font-size: 0.95rem;
+  letter-spacing: 1px;
+  margin: 0 0 8px 0;
+}
+
+.event-details p {
+  font-family: "Poppins", sans-serif;
+  font-size: 0.74rem;
+  font-weight: 500;
+  margin: 4px 0;
+  color: #2d1810;
+}
+
+/* 3. STYLING COUNTDOWN */
+.countdown-title {
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 2px;
+  color: #5c2c16;
+  margin: 0 0 10px 0;
+  text-transform: uppercase;
+}
+
+.countdown-grid {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.countdown-item {
+  /* Kotak Angka Berwarna Cokelat Terakota Serasi */
+  background: rgba(92, 44, 22, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 10px;
+  padding: 6px 4px;
+  min-width: 48px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.countdown-item span {
+  font-family: "Poppins", sans-serif;
+  display: block;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.countdown-item small {
+  font-family: "Poppins", sans-serif;
+  font-size: 0.55rem;
+  font-weight: 500;
+  color: #f5e6d3;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}

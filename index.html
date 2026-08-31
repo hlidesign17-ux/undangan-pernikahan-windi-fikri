@@ -33,6 +33,13 @@
       content="https://hlidesign17-ux.github.io/undangan-pernikahan-windi-fikri/cover.png"
     />
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Tambahkan Google Font Poppins & Playfair Display di bagian <head> -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
   </head>
 
   <body class="no-scroll">
@@ -78,8 +85,79 @@
 
       <!-- LAYER 3 -->
       <section class="layer-section">
-        <div class="media-wrapper">
+        <div class="media-wrapper layer3-wrapper">
+          <!-- Gambar Background Layer 3 -->
           <img src="layer3.png" alt="Layer 3" class="media-content" />
+
+          <!-- OVERLAY KONTEN (TUMPUK DI ATAS GAMBAR) -->
+          <div class="layer3-overlay">
+            <!-- FRAME KACA BESAR (GLASS FRAME MAIN) -->
+            <div class="layer3-glass-frame">
+              <!-- 1. MEMPELAI -->
+              <div class="couple-wrapper">
+                <h2 class="section-title-etnik">Mempelai</h2>
+
+                <!-- Pengantin Wanita -->
+                <div class="bride-card">
+                  <h3 class="couple-name">Windy, S.Apa Nich?</h3>
+                  <p class="couple-parents">
+                    Putri dari Alm. Bapak Kasman YR & <br />
+                    Ibu (Nama Ibu)
+                  </p>
+                </div>
+
+                <div class="couple-separator">&</div>
+
+                <!-- Pengantin Pria -->
+                <div class="groom-card">
+                  <h3 class="couple-name">Fikri Azida Akbar, S.T</h3>
+                  <p class="couple-parents">
+                    Putra dari Bapak Azan & <br />
+                    Ibu Nuraida. S.Pd
+                  </p>
+                </div>
+              </div>
+
+              <div class="divider-gold"></div>
+
+              <!-- 2. JADWAL ACARA -->
+              <div class="event-wrapper">
+                <h3 class="event-title">Akad Nikah & Resepsi</h3>
+                <div class="event-details">
+                  <p class="event-date">Minggu, 25 Oktober 2026</p>
+                  <p class="event-time">08.00 WIB - Selesai</p>
+                  <p class="event-venue">Gedung Asrama Haji Jambi</p>
+                </div>
+              </div>
+
+              <div class="divider-gold"></div>
+
+              <!-- 3. HITUNG MUNDUR VISUAL -->
+              <div class="countdown-wrapper">
+                <h4 class="countdown-title">Menghitung Hari</h4>
+                <div id="countdown" class="countdown-grid">
+                  <div class="countdown-item">
+                    <span id="days">00</span>
+                    <small>Hari</small>
+                  </div>
+                  <div class="countdown-item">
+                    <span id="hours">00</span>
+                    <small>Jam</small>
+                  </div>
+                  <div class="countdown-item">
+                    <span id="minutes">00</span>
+                    <small>Menit</small>
+                  </div>
+                  <div class="countdown-item">
+                    <span id="seconds">00</span>
+                    <small>Detik</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Akhir layer3-glass-frame -->
+          </div>
+          <!-- Akhir layer3-overlay -->
         </div>
       </section>
 
