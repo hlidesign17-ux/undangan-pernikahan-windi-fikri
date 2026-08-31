@@ -176,19 +176,19 @@
 
               <!-- Tombol Utama Pembuka Kamera Fullscreen -->
               <button id="btn-open-ar" class="btn-ar btn-gold">
-                Buka Kamera AR
+                📷 Buka Kamera AR
               </button>
             </div>
           </div>
         </div>
 
-        <!-- POPUP KAMERA FULLSCREEN (POP-UP MEMENUHI LAYAR HP) -->
+        <!-- POPUP KAMERA FULLSCREEN -->
         <div id="ar-popup" class="ar-popup-fullscreen hidden">
-          <!-- Frame Minang 9:16 Menutupi Layar -->
-          <img src="frame-minang.png" id="ar-frame" alt="Frame Minang" />
-
-          <!-- Live Video Stream -->
+          <!-- Live Video Stream Kamera -->
           <video id="webcam" autoplay playsinline muted></video>
+
+          <!-- Overlay Frame Minang 9:16 -->
+          <img src="frame-minang.png" id="ar-frame" alt="Frame Minang" />
 
           <!-- Canvas Tersembunyi untuk Capture Foto HD -->
           <canvas id="ar-canvas" style="display: none"></canvas>
@@ -214,7 +214,7 @@
               id="btn-download"
               class="btn-ar btn-green hidden"
               download="Foto-Minang-Windi-Fikri.png"
-              >📥 Unduh</a
+              >📥 Unduh Foto</a
             >
           </div>
         </div>

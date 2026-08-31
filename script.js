@@ -223,7 +223,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // =========================================================
-  // 3.8. LOGIKA WEBAR FULLSCREEN PHOTOBOOTH 9:16 HD (LAYER 4)
+  // 3.8. LOGIKA WEBAR FULLSCREEN PHOTOBOOTH NO-STRETCH (LAYER 4)
   // =========================================================
   const arPopup = document.getElementById("ar-popup");
   const webcamElement = document.getElementById("webcam");
@@ -239,7 +239,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let currentStream = null;
   let currentFacingMode = "user"; // Default: Kamera Depan
 
-  // 1. Fungsi Buka Kamera (Request HD 1080x1920)
+  // 1. Fungsi Buka Kamera (Widescreen HD 1080x1920)
   async function startCamera() {
     if (currentStream) {
       currentStream.getTracks().forEach((track) => track.stop());
@@ -266,7 +266,7 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (err) {
       console.error("Gagal membuka kamera:", err);
       alert(
-        "Tidak dapat mengakses kamera. Pastikan izin kamera diizinkan di browser.",
+        "Tidak dapat mengakses kamera. Pastikan izin kamera telah diberikan.",
       );
     }
   }
@@ -299,36 +299,70 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // 2. AMBIL FOTO HD & TUNGGUKAN FRAME (CAPTURE)
+  // 2. AMBIL FOTO HD 9:16 TANPA STRETCH / GEPENG
   if (btnCapture) {
     btnCapture.addEventListener("click", () => {
       if (!webcamElement.srcObject) return;
 
       const context = arCanvas.getContext("2d");
 
-      // Set resolusi Canvas murni 9:16 HD (1080 x 1920 px)
-      const canvasWidth = 1080;
-      const canvasHeight = 1920;
-      arCanvas.width = canvasWidth;
-      arCanvas.height = canvasHeight;
+      // Ukuran Canvas Target Murni 9:16 HD (1080 x 1920 px)
+      const targetWidth = 1080;
+      const targetHeight = 1920;
+      arCanvas.width = targetWidth;
+      arCanvas.height = targetHeight;
 
-      // Draw Video Feed
+      // Dimensi Asli Video dari Sensor Kamera HP
+      const videoWidth = webcamElement.videoWidth;
+      const videoHeight = webcamElement.videoHeight;
+
+      // HITUNG PERBANDINGAN DAN PENGEMBALIAN CROP CENTER (ANTI-STRETCH)
+      const targetAspect = targetWidth / targetHeight; // 9 / 16 = 0.5625
+      const videoAspect = videoWidth / videoHeight;
+
+      let sourceX = 0;
+      let sourceY = 0;
+      let sourceWidth = videoWidth;
+      let sourceHeight = videoHeight;
+
+      if (videoAspect > targetAspect) {
+        // Video terlalu lebar -> Potong sisi kiri & kanan
+        sourceWidth = videoHeight * targetAspect;
+        sourceX = (videoWidth - sourceWidth) / 2;
+      } else {
+        // Video terlalu tinggi -> Potong sisi atas & bawah
+        sourceHeight = videoWidth / targetAspect;
+        sourceY = (videoHeight - sourceHeight) / 2;
+      }
+
+      // Render Gambar Kamera dengan Pemotongan Tengah Proporsional
       context.save();
       if (currentFacingMode === "user") {
-        context.translate(canvasWidth, 0);
+        context.translate(targetWidth, 0);
         context.scale(-1, 1);
       }
-      context.drawImage(webcamElement, 0, 0, canvasWidth, canvasHeight);
+
+      context.drawImage(
+        webcamElement,
+        sourceX,
+        sourceY,
+        sourceWidth,
+        sourceHeight, // Area Asli yang Dipotong dari Kamera
+        0,
+        0,
+        targetWidth,
+        targetHeight, // Dimensi Canvas Target 9:16
+      );
       context.restore();
 
-      // Render Overlay Frame Minang di atas foto
-      context.drawImage(arFrame, 0, 0, canvasWidth, canvasHeight);
+      // Render Overlay Frame Minang tepat di atas foto
+      context.drawImage(arFrame, 0, 0, targetWidth, targetHeight);
 
-      // Siapkan File Download High-Quality PNG
+      // Siapkan File Download PNG Resolusi Tinggi
       const dataURL = arCanvas.toDataURL("image/png", 1.0);
       btnDownload.href = dataURL;
 
-      // Tampilkan Tombol Download
+      // Tampilkan Tombol Unduh Foto
       btnCapture.classList.add("hidden");
       btnDownload.classList.remove("hidden");
     });
