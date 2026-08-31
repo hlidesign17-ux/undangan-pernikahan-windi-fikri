@@ -223,65 +223,207 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // =========================================================
-  // 3.8. LOGIKA WEBAR PHOTOBOOTH (LAYER 4)
+  // 3.8. LOGIKA WEBAR PHOTOBOOTH & VIDEO 9:16 HD (LAYER 4)
   // =========================================================
   const webcamElement = document.getElementById("webcam");
   const arFrame = document.getElementById("ar-frame");
   const arCanvas = document.getElementById("ar-canvas");
   const btnStartCam = document.getElementById("btn-start-cam");
+  const btnSwitchCam = document.getElementById("btn-switch-cam");
   const btnCapture = document.getElementById("btn-capture");
   const btnDownload = document.getElementById("btn-download");
+  const btnRecord = document.getElementById("btn-record");
+  const btnDownloadVideo = document.getElementById("btn-download-video");
+  const modeSelector = document.getElementById("mode-selector");
+  const modePhotoBtn = document.getElementById("mode-photo-btn");
+  const modeVideoBtn = document.getElementById("mode-video-btn");
 
-  let stream = null;
+  let currentStream = null;
+  let currentFacingMode = "user"; // 'user' (depan) atau 'environment' (belakang)
+  let currentMode = "photo"; // 'photo' atau 'video'
+  let mediaRecorder = null;
+  let recordedChunks = [];
 
-  if (btnStartCam && webcamElement) {
-    btnStartCam.addEventListener("click", async () => {
-      try {
-        // Minta akses kamera HP (Kamera depan preferred)
-        stream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: "user" },
-          audio: false,
-        });
+  // 1. Fungsi Membuka Kamera dalam Resolusi HD 9:16 (1080x1920)
+  async function startCamera() {
+    if (currentStream) {
+      currentStream.getTracks().forEach((track) => track.stop());
+    }
 
-        webcamElement.srcObject = stream;
+    // Resolusi HD Tinggi difokuskan pada Rasio 9:16
+    const constraints = {
+      video: {
+        facingMode: currentFacingMode,
+        width: { ideal: 1080 },
+        height: { ideal: 1920 },
+        aspectRatio: { ideal: 9 / 16 },
+      },
+      audio: currentMode === "video", // Aktifkan mic jika di mode video
+    };
 
-        // Atur tombol
-        btnStartCam.classList.add("hidden");
-        btnCapture.classList.remove("hidden");
-      } catch (err) {
-        console.error("Gagal mengakses kamera:", err);
-        alert("Izin kamera ditolak atau perangkat tidak mendukung.");
+    try {
+      currentStream = await navigator.mediaDevices.getUserMedia(constraints);
+      webcamElement.srcObject = currentStream;
+
+      // Berikan efek cermin hanya jika kamera depan
+      if (currentFacingMode === "user") {
+        webcamElement.classList.add("mirror");
+      } else {
+        webcamElement.classList.remove("mirror");
       }
+
+      btnStartCam.classList.add("hidden");
+      btnSwitchCam.classList.remove("hidden");
+      modeSelector.classList.remove("hidden");
+
+      updateModeUI();
+    } catch (err) {
+      console.error("Gagal membuka kamera:", err);
+      alert("Gagal mengakses kamera. Pastikan izin kamera telah diberikan.");
+    }
+  }
+
+  // 2. Switch Kamera (Depan <-> Belakang)
+  if (btnSwitchCam) {
+    btnSwitchCam.addEventListener("click", () => {
+      currentFacingMode = currentFacingMode === "user" ? "environment" : "user";
+      startCamera();
     });
   }
 
+  // 3. Tombol Pertama Kali Membuka Kamera
+  if (btnStartCam) {
+    btnStartCam.addEventListener("click", startCamera);
+  }
+
+  // 4. Tab Pengganti Mode (Foto vs Video)
+  function updateModeUI() {
+    if (currentMode === "photo") {
+      btnCapture.classList.remove("hidden");
+      btnRecord.classList.add("hidden");
+      btnDownloadVideo.classList.add("hidden");
+    } else {
+      btnCapture.classList.add("hidden");
+      btnDownload.classList.add("hidden");
+      btnRecord.classList.remove("hidden");
+    }
+  }
+
+  if (modePhotoBtn && modeVideoBtn) {
+    modePhotoBtn.addEventListener("click", () => {
+      currentMode = "photo";
+      modePhotoBtn.classList.add("active");
+      modeVideoBtn.classList.remove("active");
+      startCamera(); // Restart stream tanpa audio
+    });
+
+    modeVideoBtn.addEventListener("click", () => {
+      currentMode = "video";
+      modeVideoBtn.classList.add("active");
+      modePhotoBtn.classList.remove("active");
+      startCamera(); // Restart stream dengan audio
+    });
+  }
+
+  // 5. FITUR AMBIL FOTO HD (9:16 PRESISI)
   if (btnCapture) {
     btnCapture.addEventListener("click", () => {
       if (!webcamElement.srcObject) return;
 
       const context = arCanvas.getContext("2d");
 
-      // Samakan ukuran canvas dengan video
-      arCanvas.width = webcamElement.videoWidth || 640;
-      arCanvas.height = webcamElement.videoHeight || 480;
+      // Set ukuran Canvas murni 9:16 HD (1080 x 1920 px) untuk kejernihan maksimal
+      const canvasWidth = 1080;
+      const canvasHeight = 1920;
+      arCanvas.width = canvasWidth;
+      arCanvas.height = canvasHeight;
 
-      // 1. Gambar Hasil Kamera ke Canvas (efek cermin diproses)
+      // Render Video ke Canvas
       context.save();
-      context.translate(arCanvas.width, 0);
-      context.scale(-1, 1);
-      context.drawImage(webcamElement, 0, 0, arCanvas.width, arCanvas.height);
+      if (currentFacingMode === "user") {
+        context.translate(canvasWidth, 0);
+        context.scale(-1, 1);
+      }
+
+      // Menggambar video sesuai rasio penuh
+      context.drawImage(webcamElement, 0, 0, canvasWidth, canvasHeight);
       context.restore();
 
-      // 2. Tumpuk Frame Minang (frame-minang.png) di atas foto canvas
-      context.drawImage(arFrame, 0, 0, arCanvas.width, arCanvas.height);
+      // Render Frame Minang (frame-minang.png) tepat di atas foto
+      context.drawImage(arFrame, 0, 0, canvasWidth, canvasHeight);
 
-      // 3. Convert ke Format Gambar & Pasang ke Tombol Unduh
-      const dataURL = arCanvas.toDataURL("image/png");
+      // Export Ke Gambar Kualitas Tinggi PNG
+      const dataURL = arCanvas.toDataURL("image/png", 1.0);
       btnDownload.href = dataURL;
 
-      // Tampilkan tombol unduh
       btnCapture.innerText = "🔄 Foto Ulang";
       btnDownload.classList.remove("hidden");
+    });
+  }
+
+  // 6. FITUR REKAM VIDEO (CANVAS COMPOSITE RECORDING)
+  if (btnRecord) {
+    btnRecord.addEventListener("click", () => {
+      if (mediaRecorder && mediaRecorder.state === "recording") {
+        // Hentikan Perekaman jika tombol diklik lagi
+        mediaRecorder.stop();
+        btnRecord.innerText = "🔴 Rekam Video Lagi";
+      } else {
+        // Mulai Perekaman
+        recordedChunks = [];
+        const canvasStream = arCanvas.captureStream(30); // 30 FPS
+
+        // Gabungkan track audio dari kamera jika ada
+        if (currentStream.getAudioTracks().length > 0) {
+          canvasStream.addTrack(currentStream.getAudioTracks()[0]);
+        }
+
+        // Jalankan render loop real-time ke canvas saat merekam
+        const ctx = arCanvas.getContext("2d");
+        arCanvas.width = 720; // Resolusi Video 9:16
+        arCanvas.height = 1280;
+
+        function renderVideoFrame() {
+          if (mediaRecorder && mediaRecorder.state === "recording") {
+            ctx.save();
+            if (currentFacingMode === "user") {
+              ctx.translate(720, 0);
+              ctx.scale(-1, 1);
+            }
+            ctx.drawImage(webcamElement, 0, 0, 720, 1280);
+            ctx.restore();
+            ctx.drawImage(arFrame, 0, 0, 720, 1280);
+            requestAnimationFrame(renderVideoFrame);
+          }
+        }
+
+        mediaRecorder = new MediaRecorder(canvasStream, {
+          mimeType: "video/webm",
+        });
+
+        mediaRecorder.ondataavailable = (e) => {
+          if (e.data.size > 0) recordedChunks.push(e.data);
+        };
+
+        mediaRecorder.onstop = () => {
+          const blob = new Blob(recordedChunks, { type: "video/webm" });
+          const videoURL = URL.createObjectURL(blob);
+          btnDownloadVideo.href = videoURL;
+          btnDownloadVideo.classList.remove("hidden");
+        };
+
+        mediaRecorder.start();
+        renderVideoFrame();
+        btnRecord.innerText = "⏹️ Hentikan Perekaman";
+
+        // Auto-stop setelah 15 detik
+        setTimeout(() => {
+          if (mediaRecorder && mediaRecorder.state === "recording") {
+            mediaRecorder.stop();
+            btnRecord.innerText = "🔴 Rekam Video Lagi";
+          }
+        }, 15000);
+      }
     });
   }
 });

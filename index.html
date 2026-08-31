@@ -161,29 +161,40 @@
         </div>
       </section>
 
-      <!-- LAYER 4: WEBAR PHOTOBOOTH -->
+      <!-- LAYER 4: WEBAR PHOTOBOOTH & VIDEO -->
       <section class="layer-section" id="layer4">
         <div class="media-wrapper layer4-wrapper">
-          <!-- Background Layer 4 -->
           <img src="layer4.png" alt="Layer 4" class="media-content" />
 
-          <!-- OVERLAY KONTEN WEBAR -->
           <div class="layer4-overlay">
             <div class="layer4-glass-frame">
-              <h2 class="ar-title">Foto Bersama</h2>
+              <h2 class="ar-title">Foto & Video Bersama</h2>
               <p class="ar-subtitle">
-                Abadikan momen serumu dengan Frame Minang khusus pernikahan
-                kami!
+                Abadikan momen serumu dengan Frame Minang!
               </p>
 
-              <!-- AREA DISPLAY KAMERA / CANVAS -->
+              <!-- AREA DISPLAY KAMERA / CANVAS (STRICT 9:16 ASPECT RATIO) -->
               <div class="webcam-container">
-                <!-- Video Feed Kamera HP -->
                 <video id="webcam" autoplay playsinline muted></video>
-                <!-- Frame Overlay Minang -->
                 <img src="frame-minang.png" id="ar-frame" alt="Frame Minang" />
-                <!-- Canvas Tersembunyi untuk Proses Capture Foto -->
                 <canvas id="ar-canvas" style="display: none"></canvas>
+
+                <!-- Tombol Flip Kamera (Ganti Depan/Belakang) -->
+                <button
+                  id="btn-switch-cam"
+                  class="btn-flip hidden"
+                  title="Ganti Kamera"
+                >
+                  🔄
+                </button>
+              </div>
+
+              <!-- PILIHAN MODE: FOTO / VIDEO -->
+              <div class="mode-selector hidden" id="mode-selector">
+                <button id="mode-photo-btn" class="mode-btn active">
+                  📸 Foto
+                </button>
+                <button id="mode-video-btn" class="mode-btn">🎥 Video</button>
               </div>
 
               <!-- KONTROL TOMBOL -->
@@ -191,14 +202,27 @@
                 <button id="btn-start-cam" class="btn-ar">
                   📷 Buka Kamera
                 </button>
+
+                <!-- Kontrol Foto -->
                 <button id="btn-capture" class="btn-ar btn-gold hidden">
                   📸 Ambil Foto
                 </button>
                 <a
                   id="btn-download"
                   class="btn-ar btn-green hidden"
-                  download="Foto-Pernikahan-Windi-Fikri.png"
+                  download="Foto-Minang-Windi-Fikri.png"
                   >📥 Unduh Foto</a
+                >
+
+                <!-- Kontrol Video -->
+                <button id="btn-record" class="btn-ar btn-red hidden">
+                  🔴 Mulai Rekam (Max 15 detik)
+                </button>
+                <a
+                  id="btn-download-video"
+                  class="btn-ar btn-green hidden"
+                  download="Video-Minang-Windi-Fikri.mp4"
+                  >📥 Unduh Video</a
                 >
               </div>
             </div>
