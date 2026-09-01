@@ -206,12 +206,12 @@
         </div>
       </section>
 
-      <!-- LAYER 5 -->
-      <section class="layer-section">
+      <!-- LAYER 5: LOKASI, RSVP & AMPLOP DIGITAL -->
+      <section class="layer-section" id="layer5">
         <div class="media-wrapper">
           <img src="layer5.png" alt="Layer 5" class="media-content" />
 
-          <!-- TOMBOL INTERAKTIF (GOOGLE MAPS & WHATSAPP) -->
+          <!-- TOMBOL INTERAKTIF (MAPS, WHATSAPP & AMPLOP DIGITAL) -->
           <div class="action-buttons">
             <a
               href="https://maps.app.goo.gl/hNvb7a6AfmGczrTg9"
@@ -240,6 +240,65 @@
               </svg>
               <span>RSVP via WhatsApp</span>
             </a>
+
+            <!-- TOMBOL BARU: AMPLOP DIGITAL -->
+            <button id="btn-open-gift" class="btn-action btn-gift">
+              <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M20 6h-3.125A4.978 4.978 0 0018 4a3 3 0 00-5.83-1h-.34A3 3 0 006 4a4.978 4.978 0 001.125 2H4a2 2 0 00-2 2v3a1 1 0 001 1h1v9a2 2 0 002 2h12a2 2 0 002-2v-9h1a1 1 0 001-1V8a2 2 0 00-2-2zM9 4a1 1 0 112 0v2H9V4zm6 0a1 1 0 112 0v2h-2V4zM4 8h7v3H4V8zm2 12v-7h5v7H6zm12 0h-5v-7h5v7zm2-9h-7V8h7v3z"
+                />
+              </svg>
+              <span>Amplop Digital</span>
+            </button>
+          </div>
+
+          <!-- POPUP GLASS CARD AMPLOP DIGITAL -->
+          <div id="gift-modal" class="gift-modal-overlay hidden">
+            <div class="gift-glass-card">
+              <button id="btn-close-gift" class="gift-close-btn">
+                &times;
+              </button>
+
+              <h3 class="gift-title">Amplop Digital</h3>
+              <p class="gift-subtitle">
+                Doa restu Anda merupakan hadiah terindah bagi kami. Namun jika
+                ingin memberi tanda kasih, Anda dapat menyalurkannya melalui:
+              </p>
+
+              <div class="gift-accounts-list">
+                <!-- MANDIRI -->
+                <div class="bank-card">
+                  <div class="bank-header">
+                    <span class="bank-name">BANK MANDIRI</span>
+                  </div>
+                  <div class="bank-body">
+                    <span class="account-number" id="rekening-mandiri"
+                      >1230009876543</span
+                    >
+                    <span class="account-holder">a.n. Windi & Fikri</span>
+                  </div>
+                  <button class="btn-copy" data-target="rekening-mandiri">
+                    📋 Salin Rekening
+                  </button>
+                </div>
+
+                <!-- DANA -->
+                <div class="bank-card dana-card">
+                  <div class="bank-header">
+                    <span class="bank-name">DANA</span>
+                  </div>
+                  <div class="bank-body">
+                    <span class="account-number" id="rekening-dana"
+                      >085217155681</span
+                    >
+                    <span class="account-holder">a.n. Windi / Fikri</span>
+                  </div>
+                  <button class="btn-copy" data-target="rekening-dana">
+                    📋 Salin Nomor
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>

@@ -305,4 +305,63 @@ document.addEventListener("DOMContentLoaded", () => {
     btnDownload.classList.remove("hidden");
     btnTriggerCam.innerText = "🔄 Ambil Ulang Foto";
   }
+
+  // =========================================================
+  // LOGIKA AMPLOP DIGITAL MODAL & COPY NUMBER (LAYER 5)
+  // =========================================================
+  const btnOpenGift = document.getElementById("btn-open-gift");
+  const btnCloseGift = document.getElementById("btn-close-gift");
+  const giftModal = document.getElementById("gift-modal");
+  const copyButtons = document.querySelectorAll(".btn-copy");
+
+  // Buka Modal Amplop Digital
+  if (btnOpenGift && giftModal) {
+    btnOpenGift.addEventListener("click", () => {
+      giftModal.classList.remove("hidden");
+    });
+  }
+
+  // Tutup Modal saat tombol X diklik
+  if (btnCloseGift && giftModal) {
+    btnCloseGift.addEventListener("click", () => {
+      giftModal.classList.add("hidden");
+    });
+  }
+
+  // Tutup Modal jika area luar kartu diklik
+  if (giftModal) {
+    giftModal.addEventListener("click", (e) => {
+      if (e.target === giftModal) {
+        giftModal.classList.add("hidden");
+      }
+    });
+  }
+
+  // Fitur Salin Nomor Rekening / DANA ke Clipboard
+  copyButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const targetId = btn.getAttribute("data-target");
+      const targetElement = document.getElementById(targetId);
+
+      if (targetElement) {
+        const textToCopy = targetElement.innerText.trim();
+
+        navigator.clipboard
+          .writeText(textToCopy)
+          .then(() => {
+            const originalText = btn.innerText;
+            btn.innerText = "✓ Berhasil Disalin!";
+            btn.classList.add("copied");
+
+            setTimeout(() => {
+              btn.innerText = originalText;
+              btn.classList.remove("copied");
+            }, 2000);
+          })
+          .catch((err) => {
+            console.error("Gagal menyalin nomor:", err);
+          });
+      }
+    });
+  });
 });
