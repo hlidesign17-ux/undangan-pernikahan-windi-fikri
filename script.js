@@ -130,7 +130,7 @@ document.addEventListener("DOMContentLoaded", () => {
   updateCountdown();
 
   // =========================================================
-  // 4. INTEGRASI SUPABASE (BUKU TAMU - LAYER 6)
+  // INTEGRASI SUPABASE (BUKU TAMU & UCAPAN - LAYER 6)
   // =========================================================
   const SUPABASE_URL = "https://wuvjloziovyalrtydkwi.supabase.co";
   const SUPABASE_KEY =
@@ -145,10 +145,33 @@ document.addEventListener("DOMContentLoaded", () => {
     const inputPesan = document.getElementById("input-pesan");
     const daftarUcapan = document.getElementById("daftar-ucapan");
 
+    // Mencegah Serangan XSS
+    function escapeHtml(str) {
+      if (!str) return "";
+      return str
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    // Format Waktu Tanggal
+    function formatWaktu(dateString) {
+      if (!dateString) return "";
+      const date = new Date(dateString);
+      return date.toLocaleDateString("id-ID", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+      });
+    }
+
     // Fungsi Ambil Ucapan dari Database Supabase
     async function loadUcapan() {
       if (!daftarUcapan) return;
 
+      // Ambil data dari Supabase
       const { data, error } = await supabaseClient.from("Ucapan").select("*");
 
       if (error) {
@@ -162,25 +185,28 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
+      // Render kartu ucapan (dibalik agar yang terbaru di atas)
       daftarUcapan.innerHTML = data
         .reverse()
-        .map(
-          (item) => `
-        <div class="ucapan-card">
-          <div class="ucapan-nama">${escapeHtml(item.Nama || "Tamu")}</div>
-          <div class="ucapan-pesan">${escapeHtml(item.Pesan || "")}</div>
-        </div>
-      `,
-        )
-        .join("");
-    }
+        .map((item) => {
+          const nama = item.Nama || "Tamu";
+          const inisial = nama.charAt(0).toUpperCase();
+          const waktu = formatWaktu(item.created_at);
 
-    // Mencegah Serangan XSS
-    function escapeHtml(str) {
-      return str
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;");
+          return `
+          <div class="ucapan-card">
+            <div class="avatar-circle">${inisial}</div>
+            <div class="ucapan-content">
+              <div class="ucapan-header-card">
+                <h4 class="ucapan-nama">${escapeHtml(nama)}</h4>
+                ${waktu ? `<span class="ucapan-waktu">${waktu}</span>` : ""}
+              </div>
+              <p class="ucapan-pesan">${escapeHtml(item.Pesan || "")}</p>
+            </div>
+          </div>
+        `;
+        })
+        .join("");
     }
 
     // Event Submit Form Ucapan
@@ -193,24 +219,31 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!namaVal || !pesanVal) return;
 
         const btnKirim = document.getElementById("btn-kirim");
+        const originalText = btnKirim ? btnKirim.innerHTML : "";
+
         if (btnKirim) {
           btnKirim.disabled = true;
-          btnKirim.innerText = "Mengirim...";
+          btnKirim.innerHTML = `<span>Mengirim...</span>`;
         }
 
-        const { error } = await supabaseClient
-          .from("Ucapan")
-          .insert([{ Nama: namaVal, Pesan: pesanVal }]);
+        // Simpan HANYA Nama dan Pesan ke Supabase
+        const { error } = await supabaseClient.from("Ucapan").insert([
+          {
+            Nama: namaVal,
+            Pesan: pesanVal,
+          },
+        ]);
 
         if (btnKirim) {
           btnKirim.disabled = false;
-          btnKirim.innerText = "Kirim Ucapan";
+          btnKirim.innerHTML = originalText;
         }
 
         if (!error) {
           inputNama.value = "";
           inputPesan.value = "";
-          loadUcapan(); // Refresh tampilan ucapan secara instan
+          await loadUcapan(); // Refresh daftar ucapan
+          daftarUcapan.scrollTop = 0; // Scroll otomatis ke ucapan teratas
         } else {
           console.error("Error insert:", error);
           alert("Gagal mengirim ucapan: " + error.message);

@@ -304,10 +304,16 @@
       </section>
 
       <!-- LAYER 6: BUKU TAMU & UCAPAN -->
-      <section class="layer-section">
+      <section class="layer-section" id="layer6">
         <div class="media-wrapper comments-wrapper">
           <div class="comments-container">
-            <h3 class="comments-title">Kirim Ucapan & Doa</h3>
+            <!-- HEADER BUKU TAMU -->
+            <div class="comments-header">
+              <h3 class="comments-title">Kirim Ucapan & Doa</h3>
+              <p class="comments-subtitle">
+                Berikan doa terbaik Anda untuk kedua mempelai
+              </p>
+            </div>
 
             <!-- FORM KIRIM UCAPAN -->
             <form id="form-ucapan" class="ucapan-form">
@@ -320,13 +326,13 @@
               />
               <textarea
                 id="input-pesan"
-                placeholder="Tulis ucapan & doa..."
+                placeholder="Tuliskan ucapan & doa hangat Anda..."
                 rows="3"
                 required
                 class="input-field"
               ></textarea>
               <button type="submit" id="btn-kirim" class="btn-submit">
-                Kirim Ucapan
+                <span>Kirim Ucapan</span>
               </button>
             </form>
 
