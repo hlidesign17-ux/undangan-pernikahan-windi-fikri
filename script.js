@@ -35,13 +35,29 @@ document.addEventListener("DOMContentLoaded", () => {
       btnAudio.classList.remove("hidden");
     }
 
-    // Putar video
+    // Putar video awal
     if (video) {
       video.muted = false;
       video.play().catch((error) => {
         console.log("Autoplay video gagal diputar:", error);
       });
     }
+  }
+
+  // LOGIKA KONTROL VIDEO (SELESAI & KLIK PLAY/PAUSE)
+  if (video) {
+    video.addEventListener("ended", () => {
+      video.currentTime = 0; // Kembalikan ke detik ke-0
+      video.pause(); // Berhenti (tidak putar otomatis)
+    });
+
+    video.addEventListener("click", () => {
+      if (video.paused) {
+        video.play();
+      } else {
+        video.pause();
+      }
+    });
   }
 
   // 2. Fitur Toggle Mute / Unmute
