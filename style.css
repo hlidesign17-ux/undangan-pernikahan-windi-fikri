@@ -1096,3 +1096,17 @@ body.no-scroll {
   text-align: center;
   font-style: italic;
 }
+
+/* Mengatur daftar penomoran rata kiri penuh */
+.ar-instructions {
+  text-align: left;
+  width: 100%;
+  margin: 12px 0 0 0;
+  padding-left: 20px; /* Ruang untuk angka penomoran */
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.ar-instructions li {
+  margin-bottom: 6px;
+}
