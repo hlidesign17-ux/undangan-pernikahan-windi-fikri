@@ -8,19 +8,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const audioIcon = document.getElementById("audio-icon");
 
   // =========================================================
-  // LOGIKA POPUP WARNING
-  // =========================================================
-  const warningModal = document.getElementById("warning-modal");
-  const btnCloseWarning = document.getElementById("btn-close-warning");
-
-  if (btnCloseWarning && warningModal) {
-    btnCloseWarning.addEventListener("click", (e) => {
-      e.stopPropagation(); // Mencegah event klik memicu layer1/buka undangan
-      warningModal.classList.add("hidden");
-    });
-  }
-
-  // =========================================================
   // 0. BACA PARAMETER NAMA TAMU DARI URL (?to=Nama atau ?p=Nama)
   // =========================================================
   const guestNameElement = document.getElementById("guest-name");
