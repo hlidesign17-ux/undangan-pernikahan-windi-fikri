@@ -52,9 +52,10 @@ body.no-scroll {
   height: 100dvh;
   z-index: 999;
   display: flex;
-  justify-content: center;
-  align-items: flex-end; /* Memastikan tombol konsisten di area bawah */
-  padding-bottom: 12dvh;
+  flex-direction: column;
+  justify-content: space-between; /* Menjaga tombol di atas/tengah & box di paling bawah */
+  align-items: center;
+  padding: 0; /* Menghapus padding container agar box bisa nempel ke pinggir */
   transition:
     opacity 1s cubic-bezier(0.25, 1, 0.5, 1),
     visibility 1s ease;
@@ -67,25 +68,24 @@ body.no-scroll {
 .cover-content {
   display: flex;
   flex-direction: column;
-  align-items: center; /* Rata tengah secara horizontal */
-  justify-content: center; /* Rata tengah secara vertikal */
-  height: 100%; /* Mengisi penuh tinggi layar */
+  align-items: center;
+  justify-content: space-between; /* Menyebarkan tombol & box nama ke atas/bawah */
+  height: 100%;
   width: 100%;
-  padding: 20px;
+  padding: 0; /* Hapus padding luar */
   box-sizing: border-box;
 }
 
-/* 1. TOMBOL BUKA UNDANGAN (EFEK GLASS) */
+/* TOMBOL BUKA UNDANGAN (Posisikan di area tengah/bawah) */
 .btn-open {
-  margin-top: 500px; /* Jarak ke atas */
-  margin-bottom: 200px; /* Jarak ke kotak nama di bawahnya */
+  margin-top: auto; /* Otomatis terdorong ke tengah bawah */
+  margin-bottom: 30px; /* Jarak antara tombol dan kotak nama */
   padding: 14px 32px;
   font-size: 1rem;
   font-weight: 600;
   letter-spacing: 0.5px;
   color: #ffffff;
 
-  /* Efek Kaca Transparan (Glassmorphism) */
   background: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -113,45 +113,49 @@ body.no-scroll {
   background: rgba(255, 255, 255, 0.1);
 }
 
-/* 2. KOTAK NAMA TAMU / RECIPIENT BOX (UKURAN KOMPAK & COMPACT) */
+/* KOTAK NAMA TAMU (MENEMPEL PENUH DI BAGIAN BAWAH SCREEN) */
 .recipient-box {
-  padding: 8px 14px; /* Padding dipangkas agar kotak ringkas */
+  width: 100%; /* Memenuhi lebar layar kiri ke kanan */
+  max-width: 100%; /* Hapus batasan piksel */
+  margin: 0;
+  padding: 16px 20px 24px 20px; /* Padding bawah sedikit lebih besar agar nyaman di HP */
 
-  /* Efek Kaca Transparan (Glassmorphism) */
-  background: rgba(0, 0, 0, 0.35);
+  /* Hilangkan border radius bawah & samping agar menyatu sempurna */
+  border-radius: 20px 20px 0 0;
+
+  /* Efek Glassmorphism */
+  background: rgba(0, 0, 0, 0.55);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  border-radius: 10px; /* Diperkecil agar serasi dengan kotaknya */
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.3); /* Border melintang di bagian atas saja */
 
-  width: 65%; /* Diperkecil dari 78% */
-  max-width: 220px; /* Diperkecil dari 288px */
   text-align: center;
   color: #ffffff;
-  box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.3);
+  box-shadow: 0 -6px 25px rgba(0, 0, 0, 0.4);
 }
 
 .recipient-label {
-  font-size: 0.65rem; /* Ukuran font dipangkas ringkas */
+  font-size: 0.75rem;
   color: rgba(255, 255, 255, 0.85);
-  margin: 0 0 2px 0;
-  letter-spacing: 0.2px;
+  margin: 0 0 4px 0;
+  letter-spacing: 0.3px;
 }
 
 .recipient-name {
-  font-size: 0.95rem; /* Ukuran nama diperkecil & pas */
+  font-size: 1.15rem;
   font-weight: 700;
   color: #ffffff;
-  margin: 2px 0;
+  margin: 4px 0;
   word-break: break-word;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .recipient-sub {
-  font-size: 0.65rem;
+  font-size: 0.75rem;
   color: rgba(255, 255, 255, 0.85);
   margin: 2px 0 0 0;
-  letter-spacing: 0.2px;
+  letter-spacing: 0.3px;
 }
 
 .layer-cover.fade-out {
@@ -1109,4 +1113,46 @@ body.no-scroll {
 
 .ar-instructions li {
   margin-bottom: 6px;
+}
+
+/* =========================================================
+   PERBAIKAN COVER FULL WIDTH (KIRI, KANAN, BAWAH NEMPEL)
+   ========================================================= */
+
+/* Hapus padding dari wrapper utama cover */
+.layer-cover {
+  padding-bottom: 0 !important;
+}
+
+.cover-content {
+  padding: 0 !important; /* Hilangkan jarak tepi 20px */
+  justify-content: flex-end; /* Memposisikan konten ke bawah */
+}
+
+/* Tombol tetap di atas kotak nama */
+.btn-open {
+  margin-top: 0 !important;
+  margin-bottom: 24px !important;
+}
+
+/* KOTAK NAMA TAMU FULL SCREEN BAWAH */
+.recipient-box {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 16px 20px 24px 20px !important;
+
+  /* Melengkung di atas saja, bawah & samping lurus nempel layar */
+  border-radius: 18px 18px 0 0 !important;
+
+  /* Efek Kaca Transparan */
+  background: rgba(0, 0, 0, 0.55) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+
+  /* Border melintang hanya di bagian atas */
+  border: none !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.3) !important;
+
+  box-shadow: 0 -8px 25px rgba(0, 0, 0, 0.5) !important;
 }
